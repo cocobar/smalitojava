@@ -226,6 +226,7 @@ void Csmali2javaApp::SaveCustomState()
 
 //git remote add origin https ://github.com/cocobar/smalitojava.git
 //git push - u origin master
+// 完整命令：C:\Program Files\Git\bin\git.exe push -u origin master
 
 // Csmali2javaApp 消息处理程序
 
