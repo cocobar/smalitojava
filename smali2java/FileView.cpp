@@ -90,6 +90,7 @@ void CFileView::OnSize(UINT nType, int cx, int cy)
 
 void CFileView::FillFileView()
 {
+#if 0
 	HTREEITEM hRoot = m_wndFileView.InsertItem(_T("FakeApp нд╪Ч"), 0, 0);
 	m_wndFileView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
 
@@ -121,6 +122,7 @@ void CFileView::FillFileView()
 	m_wndFileView.Expand(hRoot, TVE_EXPAND);
 	m_wndFileView.Expand(hSrc, TVE_EXPAND);
 	m_wndFileView.Expand(hInc, TVE_EXPAND);
+#endif
 }
 
 void CFileView::OnContextMenu(CWnd* pWnd, CPoint point)
