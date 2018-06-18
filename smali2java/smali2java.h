@@ -33,9 +33,6 @@ public:
 	virtual void LoadCustomState();
 	virtual void SaveCustomState();
 
-
-	void CreateProject();
-
 	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
 };

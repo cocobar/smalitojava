@@ -22,7 +22,7 @@
 BEGIN_MESSAGE_MAP(Csmali2javaApp, CWinAppEx)
 	ON_COMMAND(ID_APP_ABOUT, &Csmali2javaApp::OnAppAbout)
 	// 基于文件的标准文档命令
-	ON_COMMAND(ID_FILE_NEW, &Csmali2javaApp::CreateProject)
+//	ON_COMMAND(ID_FILE_NEW, &CWinAppEx::OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, &CWinAppEx::OnFileOpen)
 	// 标准打印设置命令
 	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinAppEx::OnFilePrintSetup)
@@ -56,9 +56,9 @@ Csmali2javaApp::Csmali2javaApp()
 
 Csmali2javaApp theApp;
 
-void Csmali2javaApp::CreateProject() {
-	MessageBox(m_pMainWnd->GetSafeHwnd(), _T("222"), _T("3333"), 0);
-}
+//void Csmali2javaApp::CreateProject() {
+//	MessageBox(m_pMainWnd->GetSafeHwnd(), _T("222"), _T("3333"), 0);
+//}
 
 // Csmali2javaApp 初始化
 
