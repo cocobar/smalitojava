@@ -76,7 +76,7 @@ int CFileView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndToolBar.SetRouteCommandsViaFrame(FALSE);
 
 	// 填入一些静态树视图数据(此处只需填入虚拟代码，而不是复杂的数据)
-	FillFileView();
+	//FillFileView();
 	AdjustLayout();
 
 	return 0;
@@ -85,6 +85,53 @@ int CFileView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CFileView::OnSize(UINT nType, int cx, int cy)
 {
 	CDockablePane::OnSize(nType, cx, cy);
+	AdjustLayout();
+}
+
+BOOL CFileView::ListAllProjectFile(HTREEITEM hRoot, CString strSearchPath) {
+	CString strMatch = strSearchPath + _T("*.*");
+	CString strFullName;
+	CFileFind finder;
+
+	BOOL bWorking = finder.FindFile(strMatch);
+	while (bWorking)
+	{
+		bWorking = finder.FindNextFile();
+
+		if (finder.IsDots())
+			continue;
+
+		if (finder.IsDirectory()) {
+			HTREEITEM hSrc = m_wndFileView.InsertItem(finder.GetFileName(), 0, 0, hRoot);
+			if (!ListAllProjectFile(hSrc, finder.GetFilePath() + _T("\\"))) {
+				finder.Close();
+				return FALSE;
+			}
+		}
+		else if (finder.GetFileName().Find(_T(".smali")) > 0)
+		{
+			m_wndFileView.InsertItem(finder.GetFileName(), 1, 1, hRoot);
+		}
+	}
+
+	finder.Close();
+
+	return  TRUE;
+}
+
+void CFileView::AddProjectFile(CString strRootPath) {
+
+	// 清空整个目录
+	m_wndFileView.DeleteAllItems();
+
+	// 先插入根目录
+	HTREEITEM hRoot = m_wndFileView.InsertItem(strRootPath, 0, 0);
+	m_wndFileView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
+
+
+	ListAllProjectFile(hRoot, strRootPath);
+
+
 	AdjustLayout();
 }
 

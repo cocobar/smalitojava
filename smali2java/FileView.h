@@ -36,6 +36,9 @@ protected:
 public:
 	virtual ~CFileView();
 
+	void AddProjectFile(CString strRootPath);
+	BOOL ListAllProjectFile(HTREEITEM hRoot, CString strSearchPath);
+
 protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSize(UINT nType, int cx, int cy);

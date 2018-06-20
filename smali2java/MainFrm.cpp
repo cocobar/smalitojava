@@ -435,5 +435,7 @@ void CMainFrame::OnFileNew()
 {
 	// TODO: 在此添加命令处理程序代码
 	CNewProject cNewFile;
-	cNewFile.DoModal();
+	if (cNewFile.DoModal() == IDOK) {
+		m_wndFileView.AddProjectFile(cNewFile.GetProjectRootPath());
+	}
 }
