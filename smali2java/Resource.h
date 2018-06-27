@@ -16,6 +16,7 @@
 #define IDR_MAINFRAME_256               129
 #define IDR_smali2javaTYPE              130
 #define ID_WINDOW_MANAGER               131
+#define IDR_smaliTYPE                   132
 #define ID_VIEW_FILEVIEW                133
 #define ID_VIEW_CLASSVIEW               134
 #define ID_PROPERTIES                   135
@@ -88,7 +89,6 @@
 #define IDC_BUTTON_OPEN_ONESMALI        1000
 #define IDC_EDIT_OPEN_PATH              1001
 #define IDC_LIST_FILE                   1002
-#define IDC_EDIT1                       1003
 #define IDC_EDIT_FILE_LIST_INFO         1003
 
 // Next default values for new objects

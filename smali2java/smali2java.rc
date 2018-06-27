@@ -512,6 +512,7 @@ BEGIN
     IDR_MAINFRAME           "smali2java"
     IDR_smali2javaTYPE      "\nsmali2java\nsmali2java\nsmali2java Files (*.s2j)\n.s2j\nsmali2java.Document\nsmali2java.Document"
     ID_WINDOW_MANAGER       "´°¿Ú(&W)..."
+    IDR_smaliTYPE           "\nsmali\nsmali\nsmali Files (*.smali)\n.smali\nsmali.Document\nsmali.Document"
 END
 
 STRINGTABLE

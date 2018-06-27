@@ -42,9 +42,39 @@ BOOL CViewTree::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 	return bRes;
 }
 
+CString CViewTree::GetRootPath(HTREEITEM hTreeItem) {
+
+	CString strRootPath;
+
+	while (hTreeItem) {
+		CString strNode = GetItemText(hTreeItem);
+		if (strRootPath.IsEmpty()) {
+			strRootPath = strNode;
+		}else {
+			strRootPath = strNode + CString(_T("\\")) + strRootPath;
+		}
+		
+		hTreeItem = GetParentItem(hTreeItem);
+	}
+
+	return strRootPath;
+}
+
 
 void CViewTree::OnNMDblclk(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	// TODO: 在此添加控件通知处理程序代码
+
+	// 这个是选中的列表
+	HTREEITEM hTreeItem = GetSelectedItem();
+	if (this->GetItemData(hTreeItem) == 1) {
+		CString S1 = GetRootPath(hTreeItem);
+		AfxMessageBox(CString(_T("双击")) + S1);
+	}
+
+	
+
 	*pResult = 0;
+
+	
 }

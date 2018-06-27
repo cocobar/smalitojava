@@ -103,6 +103,7 @@ BOOL CFileView::ListAllProjectFile(HTREEITEM hRoot, CString strSearchPath) {
 
 		if (finder.IsDirectory()) {
 			HTREEITEM hSrc = m_wndFileView.InsertItem(finder.GetFileName(), 0, 0, hRoot);
+			m_wndFileView.SetItemData(hSrc, 0);
 			if (!ListAllProjectFile(hSrc, finder.GetFilePath() + _T("\\"))) {
 				finder.Close();
 				return FALSE;
@@ -110,7 +111,9 @@ BOOL CFileView::ListAllProjectFile(HTREEITEM hRoot, CString strSearchPath) {
 		}
 		else if (finder.GetFileName().Find(_T(".smali")) > 0)
 		{
-			m_wndFileView.InsertItem(finder.GetFileName(), 1, 1, hRoot);
+			HTREEITEM hTreeItem = m_wndFileView.InsertItem(finder.GetFileName(), 1, 1, hRoot);
+
+			m_wndFileView.SetItemData(hTreeItem, 1);
 		}
 	}
 
@@ -125,7 +128,8 @@ void CFileView::AddProjectFile(CString strRootPath) {
 	m_wndFileView.DeleteAllItems();
 
 	// 先插入根目录
-	HTREEITEM hRoot = m_wndFileView.InsertItem(strRootPath, 0, 0);
+	HTREEITEM hRoot = m_wndFileView.InsertItem(strRootPath.Left(strRootPath.GetLength() - 1), 0, 0);
+	m_wndFileView.SetItemData(hRoot, 0);
 	m_wndFileView.SetItemState(hRoot, TVIS_BOLD, TVIS_BOLD);
 
 
@@ -226,6 +230,7 @@ void CFileView::OnProperties()
 void CFileView::OnFileOpen()
 {
 	// TODO:  在此处添加命令处理程序代码
+	AfxMessageBox(_T("打开文件"));
 }
 
 void CFileView::OnFileOpenWith()
