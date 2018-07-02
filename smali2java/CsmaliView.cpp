@@ -51,7 +51,7 @@ BOOL CsmaliView::PreCreateWindow(CREATESTRUCT& cs)
 
 // Csmali2javaView 绘制
 
-void CsmaliView::OnDraw(CDC* /*pDC*/)
+void CsmaliView::OnDraw(CDC* pDC)
 {
 	CsmaliDoc* pDoc = GetDocument();
 	ASSERT_VALID(pDoc);
@@ -59,6 +59,17 @@ void CsmaliView::OnDraw(CDC* /*pDC*/)
 		return;
 
 	// TODO:  在此处为本机数据添加绘制代码
+
+	CDC* pDc = GetDC();                          // 注意：CPaintDC只能用于OnPaint
+	CRect rect;
+	GetClientRect(&rect);
+	pDC->SetTextAlign(TA_BASELINE | TA_CENTER);
+	
+
+	for (unsigned int i = 0; i < pDoc->listString.size(); i++) {
+
+		pDC->TextOut(rect.right / 2, rect.bottom / 2, pDoc->listString[i], pDoc->listString[i].GetLength());
+	}
 }
 
 

@@ -64,6 +64,15 @@ void CsmaliDoc::Serialize(CArchive& ar)
 	else
 	{
 		// TODO:  在此添加加载代码
+		listString.clear();
+
+		
+		CString strLine;
+		while (ar.ReadString(strLine)) {
+			listString.push_back(strLine);
+		}
+
+		this->UpdateAllViews(NULL);
 	}
 }
 
