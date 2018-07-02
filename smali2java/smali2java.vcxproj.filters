@@ -60,6 +60,12 @@
     <ClInclude Include="CNewProject.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CsmaliDoc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CsmaliView.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="smali2java.cpp">
@@ -96,6 +102,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CNewProject.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CsmaliDoc.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CsmaliView.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

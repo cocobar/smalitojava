@@ -1,4 +1,3 @@
-
 // smali2javaDoc.cpp : Csmali2javaDoc 类的实现
 //
 
@@ -9,7 +8,7 @@
 #include "smali2java.h"
 #endif
 
-#include "smali2javaDoc.h"
+#include "CsmaliDoc.h"
 
 #include <propkey.h>
 
@@ -19,25 +18,25 @@
 
 // Csmali2javaDoc
 
-IMPLEMENT_DYNCREATE(Csmali2javaDoc, CDocument)
+IMPLEMENT_DYNCREATE(CsmaliDoc, CDocument)
 
-BEGIN_MESSAGE_MAP(Csmali2javaDoc, CDocument)
+BEGIN_MESSAGE_MAP(CsmaliDoc, CDocument)
 END_MESSAGE_MAP()
 
 
 // Csmali2javaDoc 构造/析构
 
-Csmali2javaDoc::Csmali2javaDoc()
+CsmaliDoc::CsmaliDoc()
 {
 	// TODO:  在此添加一次性构造代码
 
 }
 
-Csmali2javaDoc::~Csmali2javaDoc()
+CsmaliDoc::~CsmaliDoc()
 {
 }
 
-BOOL Csmali2javaDoc::OnNewDocument()
+BOOL CsmaliDoc::OnNewDocument()
 {
 	if (!CDocument::OnNewDocument())
 		return FALSE;
@@ -53,10 +52,10 @@ BOOL Csmali2javaDoc::OnNewDocument()
 
 // Csmali2javaDoc 序列化
 
-void Csmali2javaDoc::Serialize(CArchive& ar)
+void CsmaliDoc::Serialize(CArchive& ar)
 {
 
-	AfxMessageBox(_T("smali2javaDoc"));
+	AfxMessageBox(_T("CsmaliDoc"));
 
 	if (ar.IsStoring())
 	{
@@ -71,7 +70,7 @@ void Csmali2javaDoc::Serialize(CArchive& ar)
 #ifdef SHARED_HANDLERS
 
 // 缩略图的支持
-void Csmali2javaDoc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
+void CsmaliDoc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
 {
 	// 修改此代码以绘制文档数据
 	dc.FillSolidRect(lprcBounds, RGB(255, 255, 255));
@@ -79,7 +78,7 @@ void Csmali2javaDoc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
 	CString strText = _T("TODO: implement thumbnail drawing here");
 	LOGFONT lf;
 
-	CFont* pDefaultGUIFont = CFont::FromHandle((HFONT) GetStockObject(DEFAULT_GUI_FONT));
+	CFont* pDefaultGUIFont = CFont::FromHandle((HFONT)GetStockObject(DEFAULT_GUI_FONT));
 	pDefaultGUIFont->GetLogFont(&lf);
 	lf.lfHeight = 36;
 
@@ -92,7 +91,7 @@ void Csmali2javaDoc::OnDrawThumbnail(CDC& dc, LPRECT lprcBounds)
 }
 
 // 搜索处理程序的支持
-void Csmali2javaDoc::InitializeSearchContent()
+void CsmaliDoc::InitializeSearchContent()
 {
 	CString strSearchContent;
 	// 从文档数据设置搜索内容。
@@ -102,7 +101,7 @@ void Csmali2javaDoc::InitializeSearchContent()
 	SetSearchContent(strSearchContent);
 }
 
-void Csmali2javaDoc::SetSearchContent(const CString& value)
+void CsmaliDoc::SetSearchContent(const CString& value)
 {
 	if (value.IsEmpty())
 	{
@@ -125,12 +124,12 @@ void Csmali2javaDoc::SetSearchContent(const CString& value)
 // Csmali2javaDoc 诊断
 
 #ifdef _DEBUG
-void Csmali2javaDoc::AssertValid() const
+void CsmaliDoc::AssertValid() const
 {
 	CDocument::AssertValid();
 }
 
-void Csmali2javaDoc::Dump(CDumpContext& dc) const
+void CsmaliDoc::Dump(CDumpContext& dc) const
 {
 	CDocument::Dump(dc);
 }

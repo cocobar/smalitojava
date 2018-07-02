@@ -108,6 +108,8 @@
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ClassView.h" />
     <ClInclude Include="CNewProject.h" />
+    <ClInclude Include="CsmaliDoc.h" />
+    <ClInclude Include="CsmaliView.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OutputWnd.h" />
@@ -124,6 +126,8 @@
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ClassView.cpp" />
     <ClCompile Include="CNewProject.cpp" />
+    <ClCompile Include="CsmaliDoc.cpp" />
+    <ClCompile Include="CsmaliView.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />

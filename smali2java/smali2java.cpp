@@ -10,7 +10,9 @@
 
 #include "ChildFrm.h"
 #include "smali2javaDoc.h"
+#include "CsmaliDoc.h"
 #include "smali2javaView.h"
+#include "CsmaliView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -122,6 +124,15 @@ BOOL Csmali2javaApp::InitInstance()
 	if (!pDocTemplate)
 		return FALSE;
 	AddDocTemplate(pDocTemplate);
+
+	pDocTemplate = new CMultiDocTemplate(IDR_smaliTYPE,
+		RUNTIME_CLASS(CsmaliDoc),
+		RUNTIME_CLASS(CChildFrame),
+		RUNTIME_CLASS(CsmaliView));
+	if (!pDocTemplate)
+		return FALSE;
+	AddDocTemplate(pDocTemplate);
+
 
 	// 创建主 MDI 框架窗口
 	CMainFrame* pMainFrame = new CMainFrame;
