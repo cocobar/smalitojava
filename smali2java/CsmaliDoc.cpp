@@ -55,7 +55,7 @@ BOOL CsmaliDoc::OnNewDocument()
 void CsmaliDoc::Serialize(CArchive& ar)
 {
 
-	AfxMessageBox(_T("CsmaliDoc"));
+	//AfxMessageBox(_T("CsmaliDoc"));
 
 	if (ar.IsStoring())
 	{

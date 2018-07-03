@@ -69,7 +69,7 @@ void CViewTree::OnNMDblclk(NMHDR *pNMHDR, LRESULT *pResult)
 	HTREEITEM hTreeItem = GetSelectedItem();
 	if (this->GetItemData(hTreeItem) == 1) {
 		CString S1 = GetRootPath(hTreeItem);
-		AfxMessageBox(CString(_T("Ë«»÷")) + S1);
+		//AfxMessageBox(CString(_T("Ë«»÷")) + S1);
 
 		AfxGetApp()->OpenDocumentFile(S1);
 	}

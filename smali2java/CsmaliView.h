@@ -4,7 +4,7 @@
 #pragma once
 
 
-class CsmaliView : public CView
+class CsmaliView : public CScrollView
 {
 protected: // 仅从序列化创建
 	CsmaliView();
@@ -42,6 +42,9 @@ protected:
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	DECLARE_MESSAGE_MAP()
+public:
+	virtual void OnInitialUpdate();
+	virtual BOOL OnScroll(UINT nScrollCode, UINT nPos, BOOL bDoScroll = TRUE);
 };
 
 #ifndef _DEBUG  // smaliView.cpp 中的调试版本

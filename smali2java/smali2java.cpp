@@ -13,6 +13,7 @@
 #include "CsmaliDoc.h"
 #include "smali2javaView.h"
 #include "CsmaliView.h"
+#include "CNewProject.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -24,7 +25,7 @@
 BEGIN_MESSAGE_MAP(Csmali2javaApp, CWinAppEx)
 	ON_COMMAND(ID_APP_ABOUT, &Csmali2javaApp::OnAppAbout)
 	// 基于文件的标准文档命令
-//	ON_COMMAND(ID_FILE_NEW, &CWinAppEx::OnFileNew)
+	ON_COMMAND(ID_FILE_NEW, &Csmali2javaApp::OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, &CWinAppEx::OnFileOpen)
 	// 标准打印设置命令
 	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinAppEx::OnFilePrintSetup)
@@ -174,6 +175,14 @@ int Csmali2javaApp::ExitInstance()
 	AfxOleTerm(FALSE);
 
 	return CWinAppEx::ExitInstance();
+}
+
+void Csmali2javaApp::OnFileNew()
+{
+	CNewProject cNewFile;
+	if (cNewFile.DoModal() == IDOK) {
+		((CMainFrame *)m_pMainWnd)->GetCFileView()->AddProjectFile(cNewFile.GetProjectRootPath());
+	}
 }
 
 // Csmali2javaApp 消息处理程序

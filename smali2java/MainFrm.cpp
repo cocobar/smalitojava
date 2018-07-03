@@ -6,7 +6,7 @@
 #include "smali2java.h"
 
 #include "MainFrm.h"
-#include "CNewProject.h"
+//#include "CNewProject.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -28,7 +28,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
 	ON_WM_SETTINGCHANGE()
-	ON_COMMAND(ID_FILE_NEW, &CMainFrame::OnFileNew)
+	//ON_COMMAND(ID_FILE_NEW, &CMainFrame::OnFileNew)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -431,11 +431,11 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 }
 
 
-void CMainFrame::OnFileNew()
-{
-	// TODO: 在此添加命令处理程序代码
-	CNewProject cNewFile;
-	if (cNewFile.DoModal() == IDOK) {
-		m_wndFileView.AddProjectFile(cNewFile.GetProjectRootPath());
-	}
-}
+//void CMainFrame::OnFileNew()
+//{
+//	// TODO: 在此添加命令处理程序代码
+//	CNewProject cNewFile;
+//	if (cNewFile.DoModal() == IDOK) {
+//		m_wndFileView.AddProjectFile(cNewFile.GetProjectRootPath());
+//	}
+//}
