@@ -151,6 +151,7 @@ BOOL Csmali2javaApp::InitInstance()
 
 	// 分析标准 shell 命令、DDE、打开文件操作的命令行
 	CCommandLineInfo cmdInfo;
+	cmdInfo.m_nShellCommand = CCommandLineInfo::FileNothing;
 	ParseCommandLine(cmdInfo);
 
 	// 启用“DDE 执行”
