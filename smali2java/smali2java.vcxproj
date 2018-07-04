@@ -111,6 +111,9 @@
     <ClInclude Include="CsmaliDoc.h" />
     <ClInclude Include="CsmaliView.h" />
     <ClInclude Include="FileView.h" />
+    <ClInclude Include="JavaClass.h" />
+    <ClInclude Include="JavaInstructItem.h" />
+    <ClInclude Include="JavaMethod.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="PropertiesWnd.h" />
@@ -129,6 +132,17 @@
     <ClCompile Include="CsmaliDoc.cpp" />
     <ClCompile Include="CsmaliView.cpp" />
     <ClCompile Include="FileView.cpp" />
+    <ClCompile Include="JavaClass.cpp" />
+    <ClCompile Include="JavaInstructItem.cpp" />
+    <ClCompile Include="JavaMethod.cpp" />
+    <ClCompile Include="JavaMethodCodeTranslate.cpp" />
+    <ClCompile Include="JavaMethodCreateFullRunningVector.cpp" />
+    <ClCompile Include="JavaMethodCreateMacroCodeStruction.cpp" />
+    <ClCompile Include="JavaMethodCreateSegmentList.cpp" />
+    <ClCompile Include="JavaMethodCreateSegmentLoopData.cpp" />
+    <ClCompile Include="JavaMethodTools.cpp" />
+    <ClCompile Include="JavaMethodVariableDefine.cpp" />
+    <ClCompile Include="JavaMethodVariableSpread.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
