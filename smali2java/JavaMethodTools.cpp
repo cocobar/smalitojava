@@ -124,7 +124,7 @@ std::vector<CString> CJavaMethod::GetSignatureFromMethods(CString strFunction) {
 			strArray.Empty();
 			strSignature = strSignature.Right(strSignature.GetLength() - 1);
 
-			strType = CJavaClass::GetCppTypeFromJava(strType);
+			strType = CJavaClass::GetTypeFromJava(strType);
 
 			listString.push_back(strType);
 		}
@@ -145,7 +145,7 @@ std::vector<CString> CJavaMethod::GetSignatureFromMethods(CString strFunction) {
 			}
 			strArray.Empty();
 
-			strType = CJavaClass::GetCppTypeFromJava(strType);
+			strType = CJavaClass::GetTypeFromJava(strType);
 
 			listString.push_back(strType);
 		}
@@ -170,7 +170,7 @@ CString CJavaMethod::GetReturnTypeFromMethods(CString strFunction) {
 		strReturnName.Trim();
 	}
 
-	CString strType = CJavaClass::GetCppTypeFromJava(strReturnName);
+	CString strType = CJavaClass::GetTypeFromJava(strReturnName);
 
 	if (strType.Trim().IsEmpty()) {
 		printf("∏Ò Ω¥ÌŒÛ %s %d %s\n", strFunction, __LINE__, __FILE__);

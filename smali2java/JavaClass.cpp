@@ -12,7 +12,7 @@ CJavaClass::~CJavaClass()
 {
 }
 
-CString CJavaClass::GetCppTypeFromJava(CString strType) {
+CString CJavaClass::GetTypeFromJava(CString strType) {
 	int nArrayCount = 0;
 	CString strTypeString;
 
@@ -42,7 +42,7 @@ CString CJavaClass::GetCppTypeFromJava(CString strType) {
 	case 'L':
 	*/
 	if (strType.Compare("B") == 0) {
-		strTypeString = CString("unsigned char");
+		strTypeString = CString("byte");
 	}
 	else if (strType.Compare("C") == 0) {
 		strTypeString = CString("char");
@@ -70,15 +70,6 @@ CString CJavaClass::GetCppTypeFromJava(CString strType) {
 	}
 	else if (strType.Find("L") == 0) {
 		strTypeString = strType;
-#if 1
-		strTypeString.Replace('/', '_');
-		strTypeString.Replace('$', '_');
-		strTypeString.Replace(';', ' ');
-#else
-		strTypeString.Remove('/');
-		strTypeString.Remove('$');
-		strTypeString.Remove(';');
-#endif
 		strTypeString.Trim();
 		strTypeString = strTypeString.Right(strTypeString.GetLength() - 1);
 	}
@@ -88,15 +79,10 @@ CString CJavaClass::GetCppTypeFromJava(CString strType) {
 	}
 
 	// 用Cpp的vector来嵌套替代数组
-#if 1
-	while (nArrayCount--) {
-		strTypeString = CString("std::vector<") + strTypeString + CString(">");
-	}
-#else
+
 	while (nArrayCount--) {
 		strTypeString += CString("[]");
 	}
-#endif
 
 	return strTypeString;
 }
@@ -265,188 +251,182 @@ std::vector<CString> CJavaClass::GetFieldSymbolList(CString strLine) {
 	return listSymbol;
 }
 
-// 开始处理单个 Smali 文件
-BOOL CJavaClass::AnalyzeClassSmali(CString strSmaliFile) {
+// 开始分析
+BOOL CJavaClass::AnalyzeClassSmaliListString(std::vector<CString> listCode) {
 
-	CStdioFile cStdFile;
+	for (unsigned int i = 0; i < listCode.size(); i++) {
+		CString strLine = listCode[i];
+		if (strLine.Trim().GetLength() > 0) {
 
-	if (cStdFile.Open(strSmaliFile, CFile::modeRead)) {
-		CString strLine;
-
-		while (cStdFile.ReadString(strLine)) {
-
-			if (strLine.Trim().GetLength() > 0) {
-
-				if (strLine.Find("#") == 0) {						// 这个是注释行
-					printf("处理 %s\n", strLine);
-				}
-				else if (strLine.Find(".class") == 0) {				// 找到当前Class的名称
-					int nFindL = strLine.Find("L");
-					if (nFindL > 0) {
-						strClassName = GetCppTypeFromJava(strLine.Right(strLine.GetLength() - nFindL));
-						//strClassName = CJavaClass::GetCppTypeFromJava(strLine.Right(strLine.GetLength() - nFindL));
-					}
-					else {
-						strClassName = CString("Unknow_Class_Name");
-						printf("Class 名称处理错误\n");
-					}
-				}
-				else if (strLine.Find(".super") == 0) {				// 父类的名称
-					int nFindL = strLine.Find("L");
-					if (nFindL > 0) {
-						strSuperName = GetCppTypeFromJava(strLine.Right(strLine.GetLength() - nFindL));
-					}
-					else {
-						strSuperName = CString("Unknow_Class_Name");
-						printf("Super 名称处理错误\n");
-					}
-				}
-				else if (strLine.Find(".implements") == 0) {		// 实现
-					int nFindL = strLine.Find("L");
-					CString strImplement;
-					if (nFindL > 0) {
-						strImplement = strLine.Right(strLine.GetLength() - nFindL);
-					}
-					else {
-						strImplement = CString("Unknow_Class_Name");
-						printf("Implements 名称处理错误\n");
-					}
-
-					listStrImplements.push_back(strImplement);
-				}
-				else if (strLine.Find(".field") == 0) {				// 成员变量
-					unsigned int accessFlags = 0;
-					BOOL bHasEq = false;
-					CString strNote;
-					CString valType;
-					CString valName;
-					CString valValue;
-
-					std::vector<CString> listSymbol = GetFieldSymbolList(strLine);
-					std::vector<CString>::iterator it;
-					for (it = listSymbol.begin(); it != listSymbol.end(); it++) {
-						strNote = (*it);
-
-						if (strNote.Find(".field") == 0) {
-							//
-						}
-						else if (strNote.Find("private") == 0) {
-							accessFlags |= ACC_PRIVATE;
-						}
-						else if (strNote.Find("static") == 0) {
-							accessFlags |= ACC_STATIC;
-						}
-						else if (strNote.Find("final") == 0) {
-							accessFlags |= ACC_FINAL;
-						}
-						else if (strNote.Find("public") == 0) {
-							accessFlags |= ACC_PUBLIC;
-						}
-						else if (strNote.Find("protected") == 0) {
-							accessFlags |= ACC_PROTECTED;
-						}
-						else if (strNote.Find("volatile") == 0) {
-							accessFlags |= ACC_VOLATILE;
-						}
-						else if (strNote.Find("transient") == 0) {
-							accessFlags |= ACC_TRANSIENT;
-						}
-						else if (strNote.Find("synthetic") == 0) {
-							accessFlags |= ACC_SYNTHETIC;
-						}
-						else if (strNote.Find("enum") == 0) {
-							accessFlags |= ACC_ENUM;
-						}
-						else if (strNote.Find("=") == 0) {
-							bHasEq = true;
-						}
-						else if ((strNote.Find(":") > 0) && (bHasEq == false)) {
-							int nFindDot = strNote.Find(":");
-							valName = strNote.Left(nFindDot);
-							valType = strNote.Right(strNote.GetLength() - nFindDot - 1);
-							valName.Trim();
-							valType.Trim();
-						}
-						else if (bHasEq) {
-							valValue = strNote;
-						}
-						else {
-							printf("未知符号 strNote = %s\n", strNote.GetBuffer());
-							strNote.ReleaseBuffer();
-						}
-					}
-
-					// 补充成C++的代码
-					CString cppString;
-
-					if (accessFlags & ACC_PRIVATE) {
-						cppString += CString("private ");
-					}
-
-					if (accessFlags & ACC_STATIC) {
-						cppString += CString("static ");
-					}
-
-					if (accessFlags & ACC_FINAL) {
-						cppString += CString("const ");
-					}
-
-					cppString += (GetCppTypeFromJava(valType) + CString(" ") + valName);
-					if (bHasEq) {
-						cppString += (CString(" = ") + valValue);
-					}
-					cppString += CString(";");
-					printf("Cpp Code: %s\n", cppString);
-
-					listStrFields.push_back(cppString);
-				}
-				else if (strLine.Find(".method") == 0) {				// 成员方法
-
-																		// 将整个method部分的代码放入 listMethodInst 数组
-					std::vector<CString> listMethodInst;
-					listMethodInst.clear();
-					listMethodInst.push_back(strLine);
-
-					CJavaMethod cJavaMethod;
-
-					printf("###################################################################################################\n");
-					printf("开始处理函数 %s\n", strLine);
-
-					while (cStdFile.ReadString(strLine)) {
-						if (strLine.Trim().GetLength() > 0) {			// 过滤掉空行
-							listMethodInst.push_back(strLine);
-							if (strLine.Find(".end method") == 0) {		// 结束位置，处理完结束
-								break;
-							}
-							else if (strLine.Find(".locals") == 0)
-							{
-							}
-							else {
-								if (strLine.Find(":") == 0) {
-								}
-								else {
-								}
-							}
-						}
-					}
-
-					// 处理Method数组
-					cJavaMethod.strSuperClass = strSuperName;
-					cJavaMethod.strClassName = strClassName;
-					cJavaMethod.ProcessInstList(this, listMethodInst);
-
-					listJavaMethods.push_back(cJavaMethod);
-				}
-				else if (strLine.Find(".end method") == 0) {
-					printf("未成对处理的 method 结束\n");
+			if (strLine.Find("#") == 0) {						// 这个是注释行
+				printf("处理 %s\n", strLine);
+			}
+			else if (strLine.Find(".class") == 0) {				// 找到当前Class的名称
+				int nFindL = strLine.Find("L");
+				if (nFindL > 0) {
+					strClassName = GetTypeFromJava(strLine.Right(strLine.GetLength() - nFindL));
 				}
 				else {
-					printf("未处理的行 %s\n", strLine.GetBuffer());
-					strLine.ReleaseBuffer();
+					strClassName = CString("Unknow.Class.Name");
+					printf("Class 名称处理错误\n");
 				}
 			}
+			else if (strLine.Find(".super") == 0) {				// 父类的名称
+				int nFindL = strLine.Find("L");
+				if (nFindL > 0) {
+					strSuperName = GetTypeFromJava(strLine.Right(strLine.GetLength() - nFindL));
+				}
+				else {
+					strSuperName = CString("Unknow.Class.Name");
+					printf("Super 名称处理错误\n");
+				}
+			}
+			else if (strLine.Find(".implements") == 0) {		// 实现
+				int nFindL = strLine.Find("L");
+				CString strImplement;
+				if (nFindL > 0) {
+					strImplement = strLine.Right(strLine.GetLength() - nFindL);
+				}
+				else {
+					strImplement = CString("Unknow_Class_Name");
+					printf("Implements 名称处理错误\n");
+				}
+
+				listStrImplements.push_back(strImplement);
+			}
+			else if (strLine.Find(".field") == 0) {				// 成员变量
+				unsigned int accessFlags = 0;
+				BOOL bHasEq = false;
+				CString strNote;
+				CString valType;
+				CString valName;
+				CString valValue;
+
+				std::vector<CString> listSymbol = GetFieldSymbolList(strLine);
+				std::vector<CString>::iterator it;
+				for (it = listSymbol.begin(); it != listSymbol.end(); it++) {
+					strNote = (*it);
+
+					if (strNote.Find(".field") == 0) {
+						//
+					}
+					else if (strNote.Find("private") == 0) {
+						accessFlags |= ACC_PRIVATE;
+					}
+					else if (strNote.Find("static") == 0) {
+						accessFlags |= ACC_STATIC;
+					}
+					else if (strNote.Find("final") == 0) {
+						accessFlags |= ACC_FINAL;
+					}
+					else if (strNote.Find("public") == 0) {
+						accessFlags |= ACC_PUBLIC;
+					}
+					else if (strNote.Find("protected") == 0) {
+						accessFlags |= ACC_PROTECTED;
+					}
+					else if (strNote.Find("volatile") == 0) {
+						accessFlags |= ACC_VOLATILE;
+					}
+					else if (strNote.Find("transient") == 0) {
+						accessFlags |= ACC_TRANSIENT;
+					}
+					else if (strNote.Find("synthetic") == 0) {
+						accessFlags |= ACC_SYNTHETIC;
+					}
+					else if (strNote.Find("enum") == 0) {
+						accessFlags |= ACC_ENUM;
+					}
+					else if (strNote.Find("=") == 0) {
+						bHasEq = true;
+					}
+					else if ((strNote.Find(":") > 0) && (bHasEq == false)) {
+						int nFindDot = strNote.Find(":");
+						valName = strNote.Left(nFindDot);
+						valType = strNote.Right(strNote.GetLength() - nFindDot - 1);
+						valName.Trim();
+						valType.Trim();
+					}
+					else if (bHasEq) {
+						valValue = strNote;
+					}
+					else {
+						printf("未知符号 strNote = %s\n", strNote.GetBuffer());
+						strNote.ReleaseBuffer();
+					}
+				}
+
+				// 补充成C++的代码
+				CString cppString;
+
+				if (accessFlags & ACC_PRIVATE) {
+					cppString += CString("private ");
+				}
+
+				if (accessFlags & ACC_STATIC) {
+					cppString += CString("static ");
+				}
+
+				if (accessFlags & ACC_FINAL) {
+					cppString += CString("const ");
+				}
+
+				cppString += (GetTypeFromJava(valType) + CString(" ") + valName);
+				if (bHasEq) {
+					cppString += (CString(" = ") + valValue);
+				}
+				cppString += CString(";");
+				printf("Cpp Code: %s\n", cppString);
+
+				listStrFields.push_back(cppString);
+			}
+			else if (strLine.Find(".method") == 0) {				// 成员方法
+
+																	// 将整个method部分的代码放入 listMethodInst 数组
+				std::vector<CString> listMethodInst;
+				listMethodInst.clear();
+				listMethodInst.push_back(strLine);
+
+				CJavaMethod cJavaMethod;
+
+				printf("###################################################################################################\n");
+				printf("开始处理函数 %s\n", strLine);
+
+				for ( i++; i < listCode.size(); i++) {
+					if (strLine.Trim().GetLength() > 0) {			// 过滤掉空行
+						listMethodInst.push_back(strLine);
+						if (strLine.Find(".end method") == 0) {		// 结束位置，处理完结束
+							break;
+						}
+						else if (strLine.Find(".locals") == 0)
+						{
+						}
+						else {
+							if (strLine.Find(":") == 0) {
+							}
+							else {
+							}
+						}
+					}
+				}
+
+				// 处理Method数组
+				cJavaMethod.strSuperClass = strSuperName;
+				cJavaMethod.strClassName = strClassName;
+				cJavaMethod.ProcessInstList(this, listMethodInst);
+
+				listJavaMethods.push_back(cJavaMethod);
+			}
+			else if (strLine.Find(".end method") == 0) {
+				printf("未成对处理的 method 结束\n");
+			}
+			else {
+				printf("未处理的行 %s\n", strLine.GetBuffer());
+				strLine.ReleaseBuffer();
+			}
 		}
-		cStdFile.Close();
 	}
+
 	return TRUE;
 }
+

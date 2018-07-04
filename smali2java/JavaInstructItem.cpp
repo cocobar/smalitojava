@@ -27,7 +27,7 @@ CString CJavaInstructItem::GetClassNameFromInstInvoke(CString strFunction) {
 		strClassName.Trim();
 	}
 
-	strClassName = CJavaClass::GetCppTypeFromJava(strClassName);
+	strClassName = CJavaClass::GetTypeFromJava(strClassName);
 
 	if (strClassName.Trim().IsEmpty()) {
 		printf("格式错误 %s  %d %s\n", strFunction, __LINE__, __FILE__);
@@ -46,7 +46,7 @@ CString CJavaInstructItem::GetClassNameFromInstIput(CString strParam) {
 		strClassName.Trim();
 	}
 
-	strClassName = CJavaClass::GetCppTypeFromJava(strClassName);
+	strClassName = CJavaClass::GetTypeFromJava(strClassName);
 
 	if (strClassName.Trim().IsEmpty()) {
 		printf("格式错误 %s  %d %s\n", strParam, __LINE__, __FILE__);
@@ -123,7 +123,7 @@ CString CJavaInstructItem::GetFieldTypeFromInstIput(CString strParam) {
 		printf("格式错误 %s  %d %s\n", strParam, __LINE__, __FILE__);
 	}
 
-	strFieldType = CJavaClass::GetCppTypeFromJava(strFieldType);
+	strFieldType = CJavaClass::GetTypeFromJava(strFieldType);
 
 	return strFieldType;
 }
@@ -203,7 +203,7 @@ std::vector<CString> CJavaInstructItem::GetSignatureFromInstInvoke(CString strFu
 			strArray.Empty();
 			strSignature = strSignature.Right(strSignature.GetLength() - 1);
 
-			strType = CJavaClass::GetCppTypeFromJava(strType);
+			strType = CJavaClass::GetTypeFromJava(strType);
 
 			listString.push_back(strType);
 		}
@@ -224,7 +224,7 @@ std::vector<CString> CJavaInstructItem::GetSignatureFromInstInvoke(CString strFu
 			}
 			strArray.Empty();
 
-			strType = CJavaClass::GetCppTypeFromJava(strType);
+			strType = CJavaClass::GetTypeFromJava(strType);
 
 			listString.push_back(strType);
 		}
@@ -249,7 +249,7 @@ CString CJavaInstructItem::GetReturnTypeFromInstInvoke(CString strFunction) {
 		strReturnName.Trim();
 	}
 
-	CString strType = CJavaClass::GetCppTypeFromJava(strReturnName);
+	CString strType = CJavaClass::GetTypeFromJava(strReturnName);
 
 	if (strType.Trim().IsEmpty()) {
 		printf("格式错误 %s %d %s\n", strFunction, __LINE__, __FILE__);

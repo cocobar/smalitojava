@@ -60,7 +60,7 @@ void CJavaMethod::CreateSegmentList(std::vector<CString> listMethodInst)
 				if ((listI[0].Compare(".catch") == 0)) {
 					CCatchItemNode cCatchItemNode;
 					nFindDotPost = listI[1].Find("{");
-					CString strType = CJavaClass::GetCppTypeFromJava(listI[1].Left(nFindDotPost).Trim());
+					CString strType = CJavaClass::GetTypeFromJava(listI[1].Left(nFindDotPost).Trim());
 					cCatchItemNode.strCatchType = strType;
 					cCatchItemNode.strCatchLabel = strLabel;
 					listCatchData[nFindTryCatchIndex].listCatch.push_back(cCatchItemNode);
@@ -86,7 +86,7 @@ void CJavaMethod::CreateSegmentList(std::vector<CString> listMethodInst)
 				if ((listI[0].Compare(".catch") == 0)) {
 					CCatchItemNode cCatchItemNode;
 					nFindDotPost = listI[1].Find("{");
-					CString strType = CJavaClass::GetCppTypeFromJava(listI[1].Left(nFindDotPost).Trim());
+					CString strType = CJavaClass::GetTypeFromJava(listI[1].Left(nFindDotPost).Trim());
 					cCatchItemNode.strCatchType = strType;
 					cCatchItemNode.strCatchLabel = strLabel;
 

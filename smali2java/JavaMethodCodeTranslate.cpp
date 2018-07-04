@@ -250,15 +250,15 @@ void CJavaMethod::SegmentCodeTranslate(int nLevel, std::vector<int> listInstInde
 						it->strCppExpression = listI[2];
 					}
 					else if (strCmd.Find("const-string") == 0) {			//const-string vx, 字符串ID			存入字符串常量引用到vx，通过字符串ID或字符串。
-						strType = CJavaClass::GetCppTypeFromJava(CString("Ljava/lang/String;"));
+						strType = CJavaClass::GetTypeFromJava(CString("Ljava/lang/String;"));
 						it->strCppExpression = listI[2];
 					}
 					else if (strCmd.Find("const-string/jumbo") == 0) {		//同上，字串ID的数值可以超过65535
-						strType = CJavaClass::GetCppTypeFromJava(CString("Ljava/lang/String;"));
+						strType = CJavaClass::GetTypeFromJava(CString("Ljava/lang/String;"));
 						it->strCppExpression = listI[2];
 					}
 					else if (strCmd.Find("const-class") == 0) {				//const-class vx, 类型ID			存入类对象常量到vx，通过类型ID或类型（如Object.class）。
-						strType = CJavaClass::GetCppTypeFromJava(listI[2]);
+						strType = CJavaClass::GetTypeFromJava(listI[2]);
 						it->strCppExpression = CString("Unknow!");
 					}
 					else if (strCmd.Find("const") == 0) {					//const vx, lit32					存入int 型常量到vx。
@@ -309,7 +309,7 @@ void CJavaMethod::SegmentCodeTranslate(int nLevel, std::vector<int> listInstInde
 			else if (strCmd.Find("check-cast") == 0) {					//check-cast vx, 类型ID	检查vx寄存器中的对象引用是否可以转换成类型ID对应类型的实例。如不可转换，抛出ClassCastException异常，否则继续执行。
 				if (listI.size() == 3) {
 
-					CString strType = CJavaClass::GetCppTypeFromJava(listI[2]);
+					CString strType = CJavaClass::GetTypeFromJava(listI[2]);
 					CString strInputR0 = listI[1];
 					CString strExpression = SegmentListRetrodictGetExpression(listInstIndex, i, strInputR0, nInstIndex);
 					it->strCppExpression = strExpression + CString("->checkType(\"") + strType + CString("\")");
@@ -332,7 +332,7 @@ void CJavaMethod::SegmentCodeTranslate(int nLevel, std::vector<int> listInstInde
 				if (strCmd.Find("new-instance") == 0)
 				{
 					if (listI.size() == 3) {
-						CString strType = CJavaClass::GetCppTypeFromJava(listI[2]);
+						CString strType = CJavaClass::GetTypeFromJava(listI[2]);
 						it->strCppExpression = CString("new ") + strType;
 					}
 					else {
@@ -345,7 +345,7 @@ void CJavaMethod::SegmentCodeTranslate(int nLevel, std::vector<int> listInstInde
 				else if (strCmd.Find("new-array") == 0) { // 使用vector的resize方法
 					if (listI.size() == 4) {
 						CString strOutputR0 = listI[1];		CString strInputR0 = listI[2];
-						CString strType = CJavaClass::GetCppTypeFromJava(listI[3]);
+						CString strType = CJavaClass::GetTypeFromJava(listI[3]);
 						it->strCppExpression = strType + CString(".resize(") + strInputR0 + CString(")");
 					}
 					else {

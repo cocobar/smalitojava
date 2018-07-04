@@ -9,6 +9,7 @@
 #endif
 
 #include "CsmaliDoc.h"
+#include "JavaClass.h"
 
 #include <propkey.h>
 
@@ -68,7 +69,14 @@ void CsmaliDoc::Serialize(CArchive& ar)
 		
 		CString strLine;
 		while (ar.ReadString(strLine)) {
-			listString.push_back(CString(_T("//"))+ strLine);
+			listString.push_back(strLine);
+		}
+
+		CJavaClass cJavaClass;
+
+		// ·ÖÎö´úÂë
+		if (cJavaClass.AnalyzeClassSmaliListString(listString)) {
+
 		}
 
 		this->UpdateAllViews(NULL);

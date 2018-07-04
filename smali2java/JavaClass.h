@@ -56,13 +56,14 @@ public:
 	std::vector<CJavaMethod>	listJavaMethods;		// 方法列表
 
 														// 处理 smali 文件
-	BOOL AnalyzeClassSmali(CString strSmaliFile);
+
+	BOOL AnalyzeClassSmaliListString(std::vector<CString> listCode);
 
 	// 专门用于处理 Field 的符号的函数
 	std::vector<CString> GetFieldSymbolList(CString strLine);
 
 	// 将Java的类型，转换成Cpp的类型
-	static CString GetCppTypeFromJava(CString strType);
+	static CString GetTypeFromJava(CString strType);
 
 
 };

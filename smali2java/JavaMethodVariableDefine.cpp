@@ -224,13 +224,13 @@ bool CJavaMethod::SegmentListInstRebuild(std::vector<int> listSegIndex) {
 						strType = CString("double");
 					}
 					else if (strCmd.Find("const-string") == 0) {			//const-string vx, 字符串ID			存入字符串常量引用到vx，通过字符串ID或字符串。
-						strType = CJavaClass::GetCppTypeFromJava(CString("Ljava/lang/String;"));
+						strType = CJavaClass::GetTypeFromJava(CString("Ljava/lang/String;"));
 					}
 					else if (strCmd.Find("const-string/jumbo") == 0) {		//同上，字串ID的数值可以超过65535
-						strType = CJavaClass::GetCppTypeFromJava(CString("Ljava/lang/String;"));
+						strType = CJavaClass::GetTypeFromJava(CString("Ljava/lang/String;"));
 					}
 					else if (strCmd.Find("const-class") == 0) {				//const-class vx, 类型ID			存入类对象常量到vx，通过类型ID或类型（如Object.class）。
-						strType = CJavaClass::GetCppTypeFromJava(listI[2]);
+						strType = CJavaClass::GetTypeFromJava(listI[2]);
 					}
 					else if (strCmd.Find("const") == 0) {					//const vx, lit32					存入int 型常量到vx。
 						strType = CString("int");
@@ -258,7 +258,7 @@ bool CJavaMethod::SegmentListInstRebuild(std::vector<int> listSegIndex) {
 					CRegVariablePair varPair = SegmentListRetrodictGetRegInfo(listInstIndex, i, strInputR0, nInstIndex);
 					it->SetInputRegInfo(strInputR0, varPair.strStrongType, varPair.listWeakType, varPair.strValName, varPair.belongInstIndex);
 
-					CString strType = CJavaClass::GetCppTypeFromJava(listI[2]);
+					CString strType = CJavaClass::GetTypeFromJava(listI[2]);
 					it->CheckInputRegStrongType(strInputR0, strType);
 				}
 				else {
@@ -279,7 +279,7 @@ bool CJavaMethod::SegmentListInstRebuild(std::vector<int> listSegIndex) {
 				{
 					if (listI.size() == 3) {
 						CString strOutputR0 = listI[1];
-						CString strType = CJavaClass::GetCppTypeFromJava(listI[2]);
+						CString strType = CJavaClass::GetTypeFromJava(listI[2]);
 						it->SetOutputRegInfo(strOutputR0, strType, "", "");
 					}
 					else {
@@ -289,7 +289,7 @@ bool CJavaMethod::SegmentListInstRebuild(std::vector<int> listSegIndex) {
 				else if (strCmd.Find("new-array") == 0) {
 					if (listI.size() == 4) {
 						CString strOutputR0 = listI[1];		CString strInputR0 = listI[2];
-						CString strType = CJavaClass::GetCppTypeFromJava(listI[3]);
+						CString strType = CJavaClass::GetTypeFromJava(listI[3]);
 
 						CRegVariablePair varPair = SegmentListRetrodictGetRegInfo(listInstIndex, i, strInputR0, nInstIndex);
 						it->SetInputRegInfo(strInputR0, varPair.strStrongType, varPair.listWeakType, varPair.strValName, varPair.belongInstIndex);
