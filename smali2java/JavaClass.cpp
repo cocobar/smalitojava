@@ -12,6 +12,30 @@ CJavaClass::~CJavaClass()
 {
 }
 
+BOOL CJavaClass::GetPackageAndClassName(CString strFullClassName, CString &strPackageName, CString &strClassName) {
+
+	CString strTmpPackageName;
+	strTmpPackageName.Empty();
+	int nFindDot = strFullClassName.Find(".");
+
+	while (nFindDot >= 0) {
+		strTmpPackageName += strFullClassName.Left(nFindDot + 1);
+		strFullClassName = strFullClassName.Right(strFullClassName.GetLength() - nFindDot - 1);
+
+		nFindDot = strFullClassName.Find(".");
+	}
+
+	// 去掉最后一个小数点
+	if (strTmpPackageName.GetLength() > 0) {
+		strTmpPackageName = strTmpPackageName.Left(strTmpPackageName.GetLength() - 1);
+	}
+
+	strPackageName = strTmpPackageName;
+	strClassName = strFullClassName;
+
+	return TRUE;
+}
+
 CString CJavaClass::GetTypeFromJava(CString strType) {
 	int nArrayCount = 0;
 	CString strTypeString;
@@ -78,7 +102,10 @@ CString CJavaClass::GetTypeFromJava(CString strType) {
 		strTypeString = CString("UnknowType");
 	}
 
-	// 用Cpp的vector来嵌套替代数组
+	strTypeString.Replace("/", ".");
+	strTypeString.Replace(";", "");
+	strTypeString.Trim();
+
 
 	while (nArrayCount--) {
 		strTypeString += CString("[]");
@@ -259,17 +286,28 @@ BOOL CJavaClass::AnalyzeClassSmaliListString(std::vector<CString> listCode) {
 		if (strLine.Trim().GetLength() > 0) {
 
 			if (strLine.Find("#") == 0) {						// 这个是注释行
-				printf("处理 %s\n", strLine);
+				TRACE("处理 %s\n", strLine);
 			}
 			else if (strLine.Find(".class") == 0) {				// 找到当前Class的名称
 				int nFindL = strLine.Find("L");
+				strClassAttribute.Empty();
 				if (nFindL > 0) {
-					strClassName = GetTypeFromJava(strLine.Right(strLine.GetLength() - nFindL));
+					strFullClassName = GetTypeFromJava(strLine.Right(strLine.GetLength() - nFindL));
+
+					strClassAttribute = strLine.Left(nFindL);
+					strClassAttribute = strClassAttribute.Right(strClassAttribute.GetLength() - strlen(".class"));
+					strClassAttribute.Trim();
 				}
 				else {
-					strClassName = CString("Unknow.Class.Name");
-					printf("Class 名称处理错误\n");
+					strFullClassName = CString("Unknow.Class.Name");
+					TRACE("Class 名称处理错误\n");
 				}
+
+				// 获得包名和短类名
+				GetPackageAndClassName(strFullClassName, strPackageName, strClassName);
+
+				// 内部子类
+				strClassName.Replace("$", ".");
 			}
 			else if (strLine.Find(".super") == 0) {				// 父类的名称
 				int nFindL = strLine.Find("L");
@@ -278,29 +316,45 @@ BOOL CJavaClass::AnalyzeClassSmaliListString(std::vector<CString> listCode) {
 				}
 				else {
 					strSuperName = CString("Unknow.Class.Name");
-					printf("Super 名称处理错误\n");
+					TRACE("Super 名称处理错误\n");
+				}
+
+				if (strSuperName == CString("java.lang.Object")) {
+					strSuperName.Empty();
+				} else {
+					CString strTmpPackage;
+					CString strTmpClass;
+					listStrImportClass.push_back(strSuperName);
+					GetPackageAndClassName(strSuperName, strTmpPackage, strTmpClass);
+					strSuperName = strTmpClass;
 				}
 			}
 			else if (strLine.Find(".implements") == 0) {		// 实现
 				int nFindL = strLine.Find("L");
 				CString strImplement;
 				if (nFindL > 0) {
-					strImplement = strLine.Right(strLine.GetLength() - nFindL);
+					strImplement = GetTypeFromJava(strLine.Right(strLine.GetLength() - nFindL));
 				}
 				else {
-					strImplement = CString("Unknow_Class_Name");
-					printf("Implements 名称处理错误\n");
+					strImplement = CString("Unknow.Class.Name");
+					TRACE("Implements 名称处理错误\n");
 				}
+
+				CString strTmpPackage;
+				CString strTmpClass;
+				listStrImportClass.push_back(strImplement);
+				GetPackageAndClassName(strImplement, strTmpPackage, strTmpClass);
+				strImplement = strTmpClass;
 
 				listStrImplements.push_back(strImplement);
 			}
 			else if (strLine.Find(".field") == 0) {				// 成员变量
-				unsigned int accessFlags = 0;
 				BOOL bHasEq = false;
 				CString strNote;
 				CString valType;
 				CString valName;
 				CString valValue;
+				CString strAttr;
 
 				std::vector<CString> listSymbol = GetFieldSymbolList(strLine);
 				std::vector<CString>::iterator it;
@@ -311,31 +365,31 @@ BOOL CJavaClass::AnalyzeClassSmaliListString(std::vector<CString> listCode) {
 						//
 					}
 					else if (strNote.Find("private") == 0) {
-						accessFlags |= ACC_PRIVATE;
+						strAttr += CString("private ");
 					}
 					else if (strNote.Find("static") == 0) {
-						accessFlags |= ACC_STATIC;
+						strAttr += CString("static ");
 					}
 					else if (strNote.Find("final") == 0) {
-						accessFlags |= ACC_FINAL;
+						strAttr += CString("final ");
 					}
 					else if (strNote.Find("public") == 0) {
-						accessFlags |= ACC_PUBLIC;
+						strAttr += CString("public ");
 					}
 					else if (strNote.Find("protected") == 0) {
-						accessFlags |= ACC_PROTECTED;
+						strAttr += CString("protected ");
 					}
 					else if (strNote.Find("volatile") == 0) {
-						accessFlags |= ACC_VOLATILE;
+						strAttr += CString("volatile ");
 					}
 					else if (strNote.Find("transient") == 0) {
-						accessFlags |= ACC_TRANSIENT;
+						strAttr += CString("transient ");
 					}
 					else if (strNote.Find("synthetic") == 0) {
-						accessFlags |= ACC_SYNTHETIC;
+						strAttr += CString("synthetic ");
 					}
 					else if (strNote.Find("enum") == 0) {
-						accessFlags |= ACC_ENUM;
+						strAttr += CString("enum ");
 					}
 					else if (strNote.Find("=") == 0) {
 						bHasEq = true;
@@ -351,32 +405,20 @@ BOOL CJavaClass::AnalyzeClassSmaliListString(std::vector<CString> listCode) {
 						valValue = strNote;
 					}
 					else {
-						printf("未知符号 strNote = %s\n", strNote.GetBuffer());
+						TRACE1("未知符号 strNote = %s\n", strNote.GetBuffer());
 						strNote.ReleaseBuffer();
 					}
 				}
 
-				// 补充成C++的代码
-				CString cppString;
-
-				if (accessFlags & ACC_PRIVATE) {
-					cppString += CString("private ");
-				}
-
-				if (accessFlags & ACC_STATIC) {
-					cppString += CString("static ");
-				}
-
-				if (accessFlags & ACC_FINAL) {
-					cppString += CString("const ");
-				}
+				// 补充成 Java 的代码
+				CString cppString = strAttr;
 
 				cppString += (GetTypeFromJava(valType) + CString(" ") + valName);
 				if (bHasEq) {
 					cppString += (CString(" = ") + valValue);
 				}
 				cppString += CString(";");
-				printf("Cpp Code: %s\n", cppString);
+				TRACE1("Cpp Code: %s\n", cppString);
 
 				listStrFields.push_back(cppString);
 			}
@@ -389,10 +431,10 @@ BOOL CJavaClass::AnalyzeClassSmaliListString(std::vector<CString> listCode) {
 
 				CJavaMethod cJavaMethod;
 
-				printf("###################################################################################################\n");
-				printf("开始处理函数 %s\n", strLine);
+				TRACE("###################################################################################################\n");
+				TRACE1("开始处理函数 %s\n", strLine);
 
-				for ( i++; i < listCode.size(); i++) {
+				for (i++; i < listCode.size(); i++) {
 					if (strLine.Trim().GetLength() > 0) {			// 过滤掉空行
 						listMethodInst.push_back(strLine);
 						if (strLine.Find(".end method") == 0) {		// 结束位置，处理完结束
@@ -418,14 +460,67 @@ BOOL CJavaClass::AnalyzeClassSmaliListString(std::vector<CString> listCode) {
 				listJavaMethods.push_back(cJavaMethod);
 			}
 			else if (strLine.Find(".end method") == 0) {
-				printf("未成对处理的 method 结束\n");
+				TRACE("未成对处理的 method 结束\n");
 			}
 			else {
-				printf("未处理的行 %s\n", strLine.GetBuffer());
+				TRACE1("未处理的行 %s\n", strLine.GetBuffer());
 				strLine.ReleaseBuffer();
 			}
 		}
 	}
+
+	this->listJavaCode.clear();
+
+	// 添加包名
+	if (strPackageName.GetLength() > 0) {
+		listJavaCode.push_back(CString("package ") + strPackageName + CString(";"));
+	}
+	listJavaCode.push_back(CString(""));
+
+	// 添加引入的Class
+	for (unsigned int i = 0; i < listStrImportClass.size(); i++) {
+		listJavaCode.push_back(CString("import ") + listStrImportClass[i] + CString(";"));
+	}
+	listJavaCode.push_back(CString(""));
+
+
+	// 添加申明类名
+	CString strClassDefine;
+	if (strClassAttribute.GetLength() > 0) {
+		strClassDefine = strClassAttribute + CString(" ");
+	}
+	strClassDefine += (CString("class ") + strClassName);
+	if (strSuperName.GetLength() > 0) {
+		strClassDefine += (CString(" extends ") + strSuperName);
+	}
+	if (listStrImplements.size() > 0) {
+		strClassDefine += (CString(" implements "));
+		for (unsigned int i = 0; i < listStrImplements.size(); i++) {
+			if ((i + 1) < listStrImplements.size()) {
+				strClassDefine += (listStrImplements[i] + CString(","));
+			}
+			else {
+				strClassDefine += (listStrImplements[i]);
+			}
+		}
+	}
+	strClassDefine += CString(" {");
+	listJavaCode.push_back(strClassDefine);
+
+	// 增加变量申明
+	listJavaCode.push_back(CString(""));
+	for (unsigned int i = 0; i < listStrFields.size(); i++) {
+		listJavaCode.push_back(CString("    ") + listStrFields[i]);
+	}
+	listJavaCode.push_back(CString(""));
+	
+
+
+
+	// 添加类结束
+	listJavaCode.push_back(CString(""));
+	listJavaCode.push_back(CString("}"));
+	
 
 	return TRUE;
 }

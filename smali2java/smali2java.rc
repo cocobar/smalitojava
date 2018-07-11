@@ -366,6 +366,14 @@ BEGIN
     MENUITEM "Windows 7(&D)",               ID_VIEW_APPLOOK_WINDOWS_7
 END
 
+IDR_POPUP_TOOLS MENU
+BEGIN
+    POPUP "工具(&T)"
+    BEGIN
+        MENUITEM "翻译成Java代码(&J)",               ID_VIEW_STATUS_JAVA, CHECKED
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -651,6 +659,7 @@ STRINGTABLE
 BEGIN
     IDS_EXPLORER            "资源管理器"
     IDS_EDIT_MENU           "编辑"
+	IDS_TOOLS_MENU          "工具"
 END
 
 STRINGTABLE

@@ -295,14 +295,13 @@ void CMainFrame::Dump(CDumpContext& dc) const
 void CMainFrame::OnStatusJava() {
 	bShowJavaCode = !bShowJavaCode;
 
-
+	// 更新所有的Doc和视图
 	CDocManager *pDocManager = AfxGetApp()->m_pDocManager;
 	POSITION pos = pDocManager->GetFirstDocTemplatePosition();
 	while (pos) {
 		CDocTemplate*   pTemplate = (CDocTemplate*)pDocManager->GetNextDocTemplate(pos);
 		POSITION   pos = pTemplate->GetFirstDocPosition();
-		while (pos)
-		{
+		while (pos) {
 			CDocument*   pDoc = pTemplate->GetNextDoc(pos);
 			pDoc->UpdateAllViews(NULL);
 		}

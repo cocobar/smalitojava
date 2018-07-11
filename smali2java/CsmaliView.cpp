@@ -30,6 +30,8 @@ BEGIN_MESSAGE_MAP(CsmaliView, CScrollView)
 	ON_WM_RBUTTONUP()
 	ON_WM_ERASEBKGND()
 	ON_WM_RBUTTONDOWN()
+	ON_COMMAND(ID_VIEW_STATUS_JAVA, &CsmaliView::OnViewStatusJava)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_STATUS_JAVA, &CsmaliView::OnUpdateViewStatusJava)
 END_MESSAGE_MAP()
 
 // Csmali2javaView 构造/析构
@@ -103,7 +105,7 @@ void CsmaliView::OnDraw(CDC* pDC)
 
 	if (((CMainFrame *)AfxGetApp()->m_pMainWnd)->bShowJavaCode) {
 		for (unsigned int i = 0; i < pDoc->listOutString.size(); i++) {
-			pDC->SetTextColor(RGB(0, 255, 0));
+			pDC->SetTextColor(RGB(255, 255, 0));
 			pDC->TextOut(0, i * 16, pDoc->listOutString[i]);
 			CSize textSize = pDC->GetTextExtent(pDoc->listOutString[i]);
 
@@ -113,8 +115,7 @@ void CsmaliView::OnDraw(CDC* pDC)
 				csizetotal.cx = textSize.cx;
 			}
 		}
-	}
-	else {
+	} else {
 		for (unsigned int i = 0; i < pDoc->listString.size(); i++) {
 			pDC->SetTextColor(RGB(0, 255, 0));
 			pDC->TextOut(0, i * 16, pDoc->listString[i]);
@@ -126,7 +127,6 @@ void CsmaliView::OnDraw(CDC* pDC)
 				csizetotal.cx = textSize.cx;
 			}
 		}
-
 	}
 
 
@@ -166,13 +166,14 @@ void CsmaliView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 void CsmaliView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 {
 	ClientToScreen(&point);
-	//OnContextMenu(this, point);
+	OnContextMenu(this, point);
 }
 
 void CsmaliView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
 {
 #ifndef SHARED_HANDLERS
-	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
+	//theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_EDIT, point.x, point.y, this, TRUE);
+	theApp.GetContextMenuManager()->ShowPopupMenu(IDR_POPUP_TOOLS, point.x, point.y, this, TRUE);
 #endif
 }
 
@@ -336,4 +337,23 @@ void CsmaliView::OnRButtonDown(UINT nFlags, CPoint point)
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 
 	CScrollView::OnRButtonDown(nFlags, point);
+}
+
+
+void CsmaliView::OnViewStatusJava()
+{
+	// TODO: 在此添加命令处理程序代码
+	BOOL bShow = ((CMainFrame *)AfxGetApp()->m_pMainWnd)->bShowJavaCode;
+	bShow = !bShow;
+	((CMainFrame *)AfxGetApp()->m_pMainWnd)->bShowJavaCode = bShow;
+
+	this->GetDocument()->UpdateAllViews(NULL);
+}
+
+
+void CsmaliView::OnUpdateViewStatusJava(CCmdUI *pCmdUI)
+{
+	// TODO: 在此添加命令更新用户界面处理程序代码
+	BOOL bShow = ((CMainFrame *)AfxGetApp()->m_pMainWnd)->bShowJavaCode;
+	pCmdUI->SetCheck(bShow);
 }

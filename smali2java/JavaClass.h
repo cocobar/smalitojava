@@ -49,11 +49,16 @@ public:
 	CJavaClass();
 	~CJavaClass();
 
+	CString strFullClassName;							// 类完整名称
 	CString strClassName;								// 类名
+	CString strPackageName;								// 包名
+	CString strClassAttribute;							// 属性
 	CString strSuperName;								// 父类名
 	std::vector<CString>		listStrImplements;		// 接口类型
 	std::vector<CString>		listStrFields;			// 变量
+	std::vector<CString>		listStrImportClass;		// 引入的包名
 	std::vector<CJavaMethod>	listJavaMethods;		// 方法列表
+	
 
 														// 处理 smali 文件
 
@@ -64,8 +69,8 @@ public:
 	// 专门用于处理 Field 的符号的函数
 	std::vector<CString> GetFieldSymbolList(CString strLine);
 
-	// 将Java的类型，转换成Cpp的类型
 	static CString GetTypeFromJava(CString strType);
+	static BOOL GetPackageAndClassName(CString strFullClassName, CString &strPackageName, CString &strClassName);
 
 	std::vector<CString> GetClassJavaCode() {
 		return listJavaCode;

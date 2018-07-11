@@ -85,20 +85,25 @@
 #define IDS_FIND_TAB                    302
 #define IDS_EXPLORER                    305
 #define IDS_EDIT_MENU                   306
+#define IDS_TOOLS_MENU                  307
 #define IDD_DIALOG_NEW_PROJECT          310
+#define IDR_MENU1                       312
+#define IDR_POPUP_TOOLS                 312
 #define IDC_BUTTON_OPEN_ONESMALI        1000
 #define IDC_EDIT_OPEN_PATH              1001
 #define IDC_LIST_FILE                   1002
 #define IDC_EDIT_FILE_LIST_INFO         1003
 #define ID_32771                        32771
 #define ID_VIEW_STATUS_JAVA             32772
+#define ID_Menu                         32773
+#define ID_32774                        32774
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        312
-#define _APS_NEXT_COMMAND_VALUE         32773
+#define _APS_NEXT_RESOURCE_VALUE        313
+#define _APS_NEXT_COMMAND_VALUE         32775
 #define _APS_NEXT_CONTROL_VALUE         1004
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

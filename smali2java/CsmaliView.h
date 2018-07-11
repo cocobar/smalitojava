@@ -50,6 +50,8 @@ public:
 	virtual BOOL OnScroll(UINT nScrollCode, UINT nPos, BOOL bDoScroll = TRUE);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnViewStatusJava();
+	afx_msg void OnUpdateViewStatusJava(CCmdUI *pCmdUI);
 };
 
 #ifndef _DEBUG  // smaliView.cpp 中的调试版本
