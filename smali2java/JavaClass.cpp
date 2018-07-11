@@ -560,6 +560,14 @@ BOOL CJavaClass::AnalyzeClassSmaliListString(std::vector<CString> listCode) {
 		listJavaCode.push_back(CString("    ") + listStrFields[i]);
 	}
 	listJavaCode.push_back(CString(""));
+
+
+	// Ôö¼Óº¯Êý
+	for (unsigned int i = 0; i < listJavaMethods.size(); i++) {
+		listJavaCode.push_back(CString(""));
+		for ( unsigned int j = 0; j < listJavaMethods[i].listCppStringCode.size(); j++)
+		listJavaCode.push_back(CString("    ") + listJavaMethods[i].listCppStringCode[j]);
+	}
 	
 
 
