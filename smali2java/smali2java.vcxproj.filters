@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\java">
+      <UniqueIdentifier>{73a2d3b9-42c1-498b-b184-6721e317f888}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\java">
+      <UniqueIdentifier>{d15225ec-6fd2-46eb-a50b-e6e541d9a1ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -67,13 +73,13 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="JavaClass.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\java</Filter>
     </ClInclude>
     <ClInclude Include="JavaInstructItem.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\java</Filter>
     </ClInclude>
     <ClInclude Include="JavaMethod.h">
-      <Filter>头文件</Filter>
+      <Filter>头文件\java</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -120,37 +126,37 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="JavaClass.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\java</Filter>
     </ClCompile>
     <ClCompile Include="JavaInstructItem.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\java</Filter>
     </ClCompile>
     <ClCompile Include="JavaMethod.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\java</Filter>
     </ClCompile>
     <ClCompile Include="JavaMethodCodeTranslate.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\java</Filter>
     </ClCompile>
     <ClCompile Include="JavaMethodCreateFullRunningVector.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\java</Filter>
     </ClCompile>
     <ClCompile Include="JavaMethodCreateMacroCodeStruction.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\java</Filter>
     </ClCompile>
     <ClCompile Include="JavaMethodCreateSegmentList.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\java</Filter>
     </ClCompile>
     <ClCompile Include="JavaMethodCreateSegmentLoopData.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\java</Filter>
     </ClCompile>
     <ClCompile Include="JavaMethodTools.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\java</Filter>
     </ClCompile>
     <ClCompile Include="JavaMethodVariableDefine.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\java</Filter>
     </ClCompile>
     <ClCompile Include="JavaMethodVariableSpread.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\java</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

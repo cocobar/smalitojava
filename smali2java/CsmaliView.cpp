@@ -60,11 +60,9 @@ void CsmaliView::OnDraw(CDC* pDC)
 		return;
 
 	// TODO:  在此处为本机数据添加绘制代码
-
 	CFont font;
-
-	VERIFY(font.CreateFont(
-		16,                        // nHeight
+	font.CreateFont(
+		18,                        // nHeight
 		0,                         // nWidth
 		0,                         // nEscapement
 		0,                         // nOrientation
@@ -77,28 +75,19 @@ void CsmaliView::OnDraw(CDC* pDC)
 		CLIP_DEFAULT_PRECIS,       // nClipPrecision
 		DEFAULT_QUALITY,           // nQuality
 		DEFAULT_PITCH | FF_SWISS,  // nPitchAndFamily
-		_T("Fixedsys")));          // lpszFacename
-
+		_T("Consolas"));          // lpszFacename
 								   // Do something with the font just created...
 	CClientDC dc(this);
 	CFont* def_font = dc.SelectObject(&font);
-
 	CPoint scrollPos = GetScrollPosition();
-
-
 	for (unsigned int i = 0; i < pDoc->listString.size(); i++) {
 		dc.TextOut(0 - scrollPos.x, i * 16 - scrollPos.y, pDoc->listString[i], pDoc->listString[i].GetLength());
 	}
-
 	dc.SelectObject(def_font);
-
 	font.DeleteObject();
 }
 
-
 // Csmali2javaView 打印
-
-
 void CsmaliView::OnFilePrintPreview()
 {
 #ifndef SHARED_HANDLERS
@@ -182,6 +171,83 @@ void CsmaliView::OnInitialUpdate()
 BOOL CsmaliView::OnScroll(UINT nScrollCode, UINT nPos, BOOL bDoScroll)
 {
 	// TODO: 在此添加专用代码和/或调用基类
+	BOOL rtnCod = CView::OnScroll(nScrollCode, nPos, bDoScroll);
 
-	return CView::OnScroll(nScrollCode, nPos, bDoScroll);
+	BYTE vcod = (nScrollCode >> 8)&0xFF;	// 这里处理垂直滚动条的情况
+	BYTE hcod = (nScrollCode & 0xFF);		// 这里处理水平滚动条的情况
+	if (SB_THUMBTRACK == vcod || SB_THUMBPOSITION == vcod){
+		SCROLLINFO si;
+		memset(&si, 0, sizeof(si));
+		si.cbSize = sizeof(si);
+		si.fMask = SIF_TRACKPOS;
+		if (GetScrollInfo(SB_VERT, &si, SIF_TRACKPOS))
+		{
+			//m_nScrollPos = si.nTrackPos;  // 取得正确的滑块位置
+			SetScrollPos(SB_VERT, si.nTrackPos); // 设定
+			RedrawWindow();    // 重绘
+		}
+	}
+	else if (SB_LINEDOWN == vcod) {
+		int nPos = GetScrollPos(SB_VERT);
+		nPos += 16;
+		SetScrollPos(SB_VERT, nPos);
+		RedrawWindow();
+	}
+	else if (SB_LINEUP == vcod) {
+		int nPos = GetScrollPos(SB_VERT);
+		nPos -= 16;
+		SetScrollPos(SB_VERT, nPos);
+		RedrawWindow();
+	}
+	else if (SB_PAGEDOWN == vcod) {
+		int nPos = GetScrollPos(SB_VERT);
+		nPos += 16 * 20;
+		SetScrollPos(SB_VERT, nPos);
+		RedrawWindow();
+	}
+	else if (SB_PAGEUP == vcod) {
+		int nPos = GetScrollPos(SB_VERT);
+		nPos -= 16 * 20;
+		SetScrollPos(SB_VERT, nPos);
+		RedrawWindow();
+	}
+
+	if (SB_THUMBTRACK == hcod || SB_THUMBPOSITION == hcod) {
+		SCROLLINFO si;
+		memset(&si, 0, sizeof(si));
+		si.cbSize = sizeof(si);
+		si.fMask = SIF_TRACKPOS;
+		if (GetScrollInfo(SB_HORZ, &si, SIF_TRACKPOS))
+		{
+			//m_nScrollPos = si.nTrackPos;  // 取得正确的滑块位置
+			SetScrollPos(SB_HORZ, si.nTrackPos);
+			RedrawWindow();
+		}
+	}
+	else if (SB_LINEDOWN == hcod) {
+		int nPos = GetScrollPos(SB_HORZ);
+		nPos += 16;
+		SetScrollPos(SB_HORZ, nPos);
+		RedrawWindow();
+	}
+	else if (SB_LINEUP == hcod) {
+		int nPos = GetScrollPos(SB_HORZ);
+		nPos -= 16;
+		SetScrollPos(SB_HORZ, nPos);
+		RedrawWindow();
+	}
+	else if (SB_PAGEDOWN == hcod) {
+		int nPos = GetScrollPos(SB_HORZ);
+		nPos += 16 * 20;
+		SetScrollPos(SB_HORZ, nPos);
+		RedrawWindow();
+	}
+	else if (SB_PAGEUP == hcod) {
+		int nPos = GetScrollPos(SB_HORZ);
+		nPos -= 16 * 20;
+		SetScrollPos(SB_HORZ, nPos);
+		RedrawWindow();
+	}
+
+	return rtnCod;
 }

@@ -10,6 +10,9 @@ protected: // 仅从序列化创建
 	CsmaliView();
 	DECLARE_DYNCREATE(CsmaliView)
 
+private:
+ 
+
 	// 特性
 public:
 	CsmaliDoc * GetDocument() const;
