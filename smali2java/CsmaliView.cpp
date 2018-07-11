@@ -27,6 +27,7 @@ BEGIN_MESSAGE_MAP(CsmaliView, CScrollView)
 	ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CsmaliView::OnFilePrintPreview)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+	ON_WM_ERASEBKGND()
 END_MESSAGE_MAP()
 
 // Csmali2javaView 构造/析构
@@ -77,13 +78,24 @@ void CsmaliView::OnDraw(CDC* pDC)
 		DEFAULT_PITCH | FF_SWISS,  // nPitchAndFamily
 		_T("Consolas"));          // lpszFacename
 								   // Do something with the font just created...
-	CClientDC dc(this);
-	CFont* def_font = dc.SelectObject(&font);
+	CFont* def_font = pDC->SelectObject(&font);
+
+#if 0
 	CPoint scrollPos = GetScrollPosition();
 	for (unsigned int i = 0; i < pDoc->listString.size(); i++) {
-		dc.TextOut(0 - scrollPos.x, i * 16 - scrollPos.y, pDoc->listString[i], pDoc->listString[i].GetLength());
+
+		pDC->SetTextColor(RGB(0, 255, 0));
+		pDC->TextOut(0 - scrollPos.x, i * 16 - scrollPos.y, pDoc->listString[i], pDoc->listString[i].GetLength());
 	}
-	dc.SelectObject(def_font);
+#else 
+	for (unsigned int i = 0; i < pDoc->listString.size(); i++) {
+
+		pDC->SetTextColor(RGB(0, 255, 0));
+		pDC->TextOut(0, i * 16, pDoc->listString[i], pDoc->listString[i].GetLength());
+	}
+#endif
+
+	pDC->SelectObject(def_font);
 	font.DeleteObject();
 }
 
@@ -250,4 +262,23 @@ BOOL CsmaliView::OnScroll(UINT nScrollCode, UINT nPos, BOOL bDoScroll)
 	}
 
 	return rtnCod;
+}
+
+
+BOOL CsmaliView::OnEraseBkgnd(CDC* pDC)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	CBrush brush(RGB(0, 0, 0));
+	CBrush *pOldBrush = pDC->SelectObject(&brush);
+
+	pDC->SetBkMode(TRANSPARENT);
+
+	CRect rect;
+	pDC->GetClipBox(&rect);
+	pDC->PatBlt(rect.left, rect.top, rect.Width(), rect.Height(), PATCOPY);
+	pDC->SelectObject(pOldBrush);
+
+	return TRUE;
+	//return CScrollView::OnEraseBkgnd(pDC);
 }

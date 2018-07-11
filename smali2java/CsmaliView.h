@@ -48,6 +48,7 @@ protected:
 public:
 	virtual void OnInitialUpdate();
 	virtual BOOL OnScroll(UINT nScrollCode, UINT nPos, BOOL bDoScroll = TRUE);
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 };
 
 #ifndef _DEBUG  // smaliView.cpp 中的调试版本
