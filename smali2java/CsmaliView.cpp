@@ -8,6 +8,7 @@
 #include "smali2java.h"
 #endif
 
+#include "MainFrm.h"
 #include "CsmaliDoc.h"
 #include "CsmaliView.h"
 
@@ -28,6 +29,7 @@ BEGIN_MESSAGE_MAP(CsmaliView, CScrollView)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
 	ON_WM_ERASEBKGND()
+	ON_WM_RBUTTONDOWN()
 END_MESSAGE_MAP()
 
 // Csmali2javaView 构造/析构
@@ -88,11 +90,49 @@ void CsmaliView::OnDraw(CDC* pDC)
 		pDC->TextOut(0 - scrollPos.x, i * 16 - scrollPos.y, pDoc->listString[i], pDoc->listString[i].GetLength());
 	}
 #else 
-	for (unsigned int i = 0; i < pDoc->listString.size(); i++) {
+	//for (unsigned int i = 0; i < pDoc->listString.size(); i++) {
+	//	pDC->SetTextColor(RGB(0, 255, 0));
+	//	pDC->TextOut(0, i * 16, pDoc->listString[i], pDoc->listString[i].GetLength());
+	//}
 
-		pDC->SetTextColor(RGB(0, 255, 0));
-		pDC->TextOut(0, i * 16, pDoc->listString[i], pDoc->listString[i].GetLength());
+	CSize csizetotal;
+
+	csizetotal.cy = 0;
+
+	//pDoc->listOutString = pDoc->listString;
+
+	if (((CMainFrame *)AfxGetApp()->m_pMainWnd)->bShowJavaCode) {
+		for (unsigned int i = 0; i < pDoc->listOutString.size(); i++) {
+			pDC->SetTextColor(RGB(0, 255, 0));
+			pDC->TextOut(0, i * 16, pDoc->listOutString[i]);
+			CSize textSize = pDC->GetTextExtent(pDoc->listOutString[i]);
+
+			csizetotal.cy = ((i + 1) * 16);
+
+			if (textSize.cx > csizetotal.cx) {
+				csizetotal.cx = textSize.cx;
+			}
+		}
 	}
+	else {
+		for (unsigned int i = 0; i < pDoc->listString.size(); i++) {
+			pDC->SetTextColor(RGB(0, 255, 0));
+			pDC->TextOut(0, i * 16, pDoc->listString[i]);
+			CSize textSize = pDC->GetTextExtent(pDoc->listString[i]);
+
+			csizetotal.cy = ((i + 1) * 16);
+
+			if (textSize.cx > csizetotal.cx) {
+				csizetotal.cx = textSize.cx;
+			}
+		}
+
+	}
+
+
+	SetScrollSizes(MM_TEXT, csizetotal);
+
+
 #endif
 
 	pDC->SelectObject(def_font);
@@ -126,7 +166,7 @@ void CsmaliView::OnEndPrinting(CDC* /*pDC*/, CPrintInfo* /*pInfo*/)
 void CsmaliView::OnRButtonUp(UINT /* nFlags */, CPoint point)
 {
 	ClientToScreen(&point);
-	OnContextMenu(this, point);
+	//OnContextMenu(this, point);
 }
 
 void CsmaliView::OnContextMenu(CWnd* /* pWnd */, CPoint point)
@@ -175,9 +215,16 @@ void CsmaliView::OnInitialUpdate()
 
 	CSize csizetotal;
 
+#if 0
 	csizetotal.cx = 1000;
 	csizetotal.cy = pDoc->listString.size() * 16;
 	SetScrollSizes(MM_TEXT, csizetotal);
+
+#else
+	csizetotal.cx = 10;
+	csizetotal.cy = 10;
+	SetScrollSizes(MM_TEXT, csizetotal);
+#endif
 }
 
 BOOL CsmaliView::OnScroll(UINT nScrollCode, UINT nPos, BOOL bDoScroll)
@@ -281,4 +328,12 @@ BOOL CsmaliView::OnEraseBkgnd(CDC* pDC)
 
 	return TRUE;
 	//return CScrollView::OnEraseBkgnd(pDC);
+}
+
+
+void CsmaliView::OnRButtonDown(UINT nFlags, CPoint point)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	CScrollView::OnRButtonDown(nFlags, point);
 }

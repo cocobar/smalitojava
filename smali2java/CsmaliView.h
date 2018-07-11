@@ -49,6 +49,7 @@ public:
 	virtual void OnInitialUpdate();
 	virtual BOOL OnScroll(UINT nScrollCode, UINT nPos, BOOL bDoScroll = TRUE);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 };
 
 #ifndef _DEBUG  // smaliView.cpp 中的调试版本

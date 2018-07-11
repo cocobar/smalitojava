@@ -12,6 +12,8 @@ protected: // 仅从序列化创建
 public:
 	std::vector<CString> listString;
 
+	std::vector<CString> listOutString;
+
 	// 操作
 public:
 

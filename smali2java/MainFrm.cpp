@@ -24,6 +24,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CMDIFrameWndEx)
 	ON_WM_CREATE()
 	ON_COMMAND(ID_WINDOW_MANAGER, &CMainFrame::OnWindowManager)
 	ON_COMMAND(ID_VIEW_CUSTOMIZE, &CMainFrame::OnViewCustomize)
+	ON_COMMAND(ID_VIEW_STATUS_JAVA, &CMainFrame::OnStatusJava)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_STATUS_JAVA, &CMainFrame::OnUpdateStatusJava)
 	ON_REGISTERED_MESSAGE(AFX_WM_CREATETOOLBAR, &CMainFrame::OnToolbarCreateNew)
 	ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
@@ -45,11 +47,15 @@ CMainFrame::CMainFrame()
 {
 	// TODO:  在此添加成员初始化代码
 	theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_VS_2008);
+
+	bShowJavaCode = FALSE;
 }
 
 CMainFrame::~CMainFrame()
 {
 }
+
+
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
@@ -171,6 +177,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	lstBasicCommands.AddTail(ID_EDIT_PASTE);
 	lstBasicCommands.AddTail(ID_EDIT_UNDO);
 	lstBasicCommands.AddTail(ID_APP_ABOUT);
+	lstBasicCommands.AddTail(ID_VIEW_STATUS_JAVA);
 	lstBasicCommands.AddTail(ID_VIEW_STATUS_BAR);
 	lstBasicCommands.AddTail(ID_VIEW_TOOLBAR);
 	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2003);
@@ -285,6 +292,26 @@ void CMainFrame::Dump(CDumpContext& dc) const
 
 
 // CMainFrame 消息处理程序
+void CMainFrame::OnStatusJava() {
+	bShowJavaCode = !bShowJavaCode;
+
+
+	CDocManager *pDocManager = AfxGetApp()->m_pDocManager;
+	POSITION pos = pDocManager->GetFirstDocTemplatePosition();
+	while (pos) {
+		CDocTemplate*   pTemplate = (CDocTemplate*)pDocManager->GetNextDocTemplate(pos);
+		POSITION   pos = pTemplate->GetFirstDocPosition();
+		while (pos)
+		{
+			CDocument*   pDoc = pTemplate->GetNextDoc(pos);
+			pDoc->UpdateAllViews(NULL);
+		}
+	}
+}
+
+void CMainFrame::OnUpdateStatusJava(CCmdUI * pCmdUI) {
+	pCmdUI->SetCheck(bShowJavaCode);
+}
 
 void CMainFrame::OnWindowManager()
 {

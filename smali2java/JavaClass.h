@@ -57,6 +57,8 @@ public:
 
 														// 处理 smali 文件
 
+	std::vector<CString>		listJavaCode;			// 翻译输出的JavaCode
+
 	BOOL AnalyzeClassSmaliListString(std::vector<CString> listCode);
 
 	// 专门用于处理 Field 的符号的函数
@@ -64,6 +66,10 @@ public:
 
 	// 将Java的类型，转换成Cpp的类型
 	static CString GetTypeFromJava(CString strType);
+
+	std::vector<CString> GetClassJavaCode() {
+		return listJavaCode;
+	}
 
 
 };

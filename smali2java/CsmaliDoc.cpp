@@ -76,7 +76,7 @@ void CsmaliDoc::Serialize(CArchive& ar)
 
 		// ·ÖÎö´úÂë
 		if (cJavaClass.AnalyzeClassSmaliListString(listString)) {
-
+			listOutString = cJavaClass.GetClassJavaCode();
 		}
 
 		this->UpdateAllViews(NULL);

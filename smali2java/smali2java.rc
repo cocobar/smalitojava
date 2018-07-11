@@ -218,6 +218,7 @@ BEGIN
         BEGIN
             MENUITEM "<占位符>",                       ID_VIEW_TOOLBAR
         END
+        MENUITEM "代码翻译(&J)",                    ID_VIEW_STATUS_JAVA, CHECKED
         MENUITEM "状态栏(&S)",                     ID_VIEW_STATUS_BAR
         POPUP "应用程序外观(&A)"
         BEGIN
@@ -657,6 +658,11 @@ BEGIN
     IDS_BUILD_TAB           "生成"
     IDS_DEBUG_TAB           "调试"
     IDS_FIND_TAB            "查找"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_STATUS_JAVA     "代码处于翻译状态"
 END
 
 #endif    // 中文(简体，中国) resources
