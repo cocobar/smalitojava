@@ -12,6 +12,46 @@ CJavaClass::~CJavaClass()
 {
 }
 
+BOOL CJavaClass::AddImportClassToList(CString strFullClass) {
+
+	if (strFullClass.Find("[") > 0) {
+		strFullClass = strFullClass.Left(strFullClass.Find("["));
+	}
+
+	if ((strFullClass == CString("byte")) || (strFullClass == CString("char"))
+		|| (strFullClass == CString("double")) || (strFullClass == CString("float"))
+		|| (strFullClass == CString("int")) || (strFullClass == CString("long"))
+		|| (strFullClass == CString("short")) || (strFullClass == CString("void"))
+		|| (strFullClass == CString("boolean"))) {
+		return FALSE;
+	}
+
+	if (strFullClass == this->strFullClassName) {
+		return FALSE;
+	}
+
+	CString strPackage;
+	CString strShortClass;
+	GetPackageAndClassName(strFullClass, strPackage, strShortClass);
+
+	if (strPackage == CString("java.lang")) {
+		return FALSE;
+	}
+
+	if (strPackage == this->strPackageName) {
+		return FALSE;
+	}
+
+	if (find(listStrImportClass.begin(), listStrImportClass.end(), strFullClass) == listStrImportClass.end()) {
+		listStrImportClass.push_back(strFullClass);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+
+
 BOOL CJavaClass::GetPackageAndClassName(CString strFullClassName, CString &strPackageName, CString &strClassName) {
 
 	CString strTmpPackageName;
@@ -90,7 +130,7 @@ CString CJavaClass::GetTypeFromJava(CString strType) {
 		strTypeString = CString("void");
 	}
 	else if (strType.Compare("Z") == 0) {
-		strTypeString = CString("bool");
+		strTypeString = CString("boolean");
 	}
 	else if (strType.Find("L") == 0) {
 		strTypeString = strType;
@@ -324,7 +364,7 @@ BOOL CJavaClass::AnalyzeClassSmaliListString(std::vector<CString> listCode) {
 				} else {
 					CString strTmpPackage;
 					CString strTmpClass;
-					listStrImportClass.push_back(strSuperName);
+					AddImportClassToList(strSuperName);
 					GetPackageAndClassName(strSuperName, strTmpPackage, strTmpClass);
 					strSuperName = strTmpClass;
 				}
@@ -342,7 +382,8 @@ BOOL CJavaClass::AnalyzeClassSmaliListString(std::vector<CString> listCode) {
 
 				CString strTmpPackage;
 				CString strTmpClass;
-				listStrImportClass.push_back(strImplement);
+
+				AddImportClassToList(strImplement);
 				GetPackageAndClassName(strImplement, strTmpPackage, strTmpClass);
 				strImplement = strTmpClass;
 
@@ -413,7 +454,13 @@ BOOL CJavaClass::AnalyzeClassSmaliListString(std::vector<CString> listCode) {
 				// ²¹³ä³É Java µÄ´úÂë
 				CString cppString = strAttr;
 
-				cppString += (GetTypeFromJava(valType) + CString(" ") + valName);
+				CString strFullTypeName = GetTypeFromJava(valType);
+				CString strTmpPackage;
+				CString strTmpClass;
+				AddImportClassToList(strFullTypeName);
+				GetPackageAndClassName(strFullTypeName, strTmpPackage, strTmpClass);
+
+				cppString += (strTmpClass + CString(" ") + valName);
 				if (bHasEq) {
 					cppString += (CString(" = ") + valValue);
 				}

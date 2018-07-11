@@ -68,9 +68,12 @@ public:
 
 	// 专门用于处理 Field 的符号的函数
 	std::vector<CString> GetFieldSymbolList(CString strLine);
+	BOOL AddImportClassToList(CString strFullClassName);
 
 	static CString GetTypeFromJava(CString strType);
 	static BOOL GetPackageAndClassName(CString strFullClassName, CString &strPackageName, CString &strClassName);
+
+
 
 	std::vector<CString> GetClassJavaCode() {
 		return listJavaCode;
